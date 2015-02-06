@@ -92,6 +92,7 @@ public class UsServlet extends HttpServlet {
 
 	}
 
+	@SuppressWarnings("deprecation")
 	private void updateUs(HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
 

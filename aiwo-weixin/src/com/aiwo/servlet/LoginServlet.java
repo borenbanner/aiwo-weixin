@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.aiwo.server.connect.Config;
 import com.aiwo.server.pojo.Device;
 import com.aiwo.server.pojo.User;
 import com.aiwo.server.service.UserService;
@@ -74,6 +73,7 @@ public class LoginServlet extends HttpServlet {
 	 * @throws IOException
 	 *             if an error occurred
 	 */
+	@SuppressWarnings("unused")
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 
