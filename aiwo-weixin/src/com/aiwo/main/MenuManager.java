@@ -27,6 +27,7 @@ public class MenuManager {
 	 * 
 	 * @return
 	 */
+	@SuppressWarnings("unused")
 	private static Menu getMenu() {
 
 		ViewButton btn11 = new ViewButton();
