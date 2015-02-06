@@ -2,12 +2,10 @@ package com.aiwo.server.service;
 
 import net.sf.json.JSONObject;
 
-import com.aiwo.server.dao.UserDao;
 import com.aiwo.server.dao.WeixinDao;
 
 public class WeixinService {
 
-	private UserDao userDao = new UserDao();;
 	private WeixinDao weixinDao = new WeixinDao();
 
 	/**
