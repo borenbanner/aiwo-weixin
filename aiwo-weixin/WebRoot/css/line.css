@@ -1,0 +1,134 @@
+@charset "utf-8";
+/* CSS Document */
+
+*{ margin:0; padding:0; }
+body {
+	/* font-family:'微软雅黑'; */
+}
+
+.line-main {
+	width:100%;
+	height:100%;
+	FILTER: progid:DXImageTransform.Microsoft.Gradient(gradientType=1,startColorStr="#5fe5df",endColorStr="#5fabbd",endColorStr="#5fe5df"); 
+	background:-moz-linear-gradient( left, #5fe5df, #5fabbd,#5fe5df); 
+	background: -o-linear-gradient(left, #5fe5df 0%,#5fabbd 50%,#5fe5df 100%);
+	background: -webkit-gradient(linear, left top, right top, color-stop(0%, #5fe5df),color-stop(50%, #5fabbd),color-stop(100%, #5fe5df));
+	background:-webkit-gradient(linear, 0% 0%, 100% 0%, from(#5fe5df), color-stop(50%, #5fabbd), to(#5fe5df));
+	background: linear-gradient(to right, #5fe5df 0%,#5fabbd 50%,#5fe5df 100%);
+	background-size:cover;
+	text-align:center;
+	/* padding-bottom:10px; */
+}
+.line-main .btn-group {
+	width:40%;
+	margin-top:20px;
+}
+.line-main .btn {
+	border-color:#FFF;
+	background:none;
+	color:#FFF;
+	width:50%;
+}
+.line-main .active {
+	background-color:#00cb31;	
+}
+
+.cutline {
+	text-align:left;
+	padding: 2px;
+}
+.cutline>p {
+	display:inline-block;
+	width:28%;
+	margin-left:5px;
+}
+.cutline>p>img {
+	width:1.5em;
+	vertical-align: middle;
+}
+
+.line {
+	position:relative;
+	width:100%;
+	height:250px;
+	margin:0 auto;
+	overflow:hidden;
+	margin-bottom: -33px;
+}
+
+.canvas {
+	display:block;
+	position:absolute;
+	left:-33px;
+	bottom:0px;
+}
+
+.icon-left {
+	position:absolute;
+	left:0px;
+	bottom:0px;
+	color:#FFF;
+	font-size:14px;
+	font-weight:bolder;
+	cursor:pointer;
+}
+.icon-right {
+	position:absolute;
+	right:0px;
+	bottom:0px;
+	color:#FFF;
+	font-size:14px;
+	font-weight:bolder;
+	cursor:pointer;
+}
+
+#wrapper_line,.wrapper_inOutLine,#wrapper_airLine,#wrapper_allLine {
+	position: relative;
+	z-index: 1;
+	/* top: 45px; */
+	bottom: 0;
+	left: 0;
+	width: 100%;
+	/* background: #aaa; */
+	overflow: auto;
+}
+
+#scroller_line,#scroller_inOutLine,#scroller_airLine,#scroller_allLine {
+	/* width: 500px; */
+	height: 100%;
+	text-align:right;
+	padding: 0;
+}
+
+
+.deviceList {
+	-moz-user-select: none;
+	background-image: none;
+	border: 1px solid transparent;
+	border-radius: 4px;
+	display: inline-block;
+	font-size: 14px;
+	font-weight: normal;
+	line-height: 1.42857;
+	margin-bottom: 0;
+	padding: 6px 12px;
+	text-align: center;
+	vertical-align: middle;
+	white-space: nowrap;
+	margin-top: 20px;
+	background-color: #999;
+	color: #fff;
+	width: 80%;
+}
+
+.managerBar {
+	float: right;
+	width: 20px;
+	display: inline;
+	margin-right: 5px;
+}
+
+.main {
+	text-align: center;
+	margin: auto;
+}

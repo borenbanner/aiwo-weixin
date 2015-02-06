@@ -1,0 +1,83 @@
+@CHARSET "UTF-8";
+.scroll-select{
+	/* margin: 0 auto;
+	width:260px;
+	height:130px; */
+	margin:-25px 10px;
+}
+
+.scroll-select table{
+	
+	width:100%;
+	height:100%;
+	border-collapse:collapse;		
+}
+
+.scroll-select table tr td{
+	text-align:center;
+}
+
+.scroll-select table tr td.btn-area{
+	width:20px;
+	/* font-size:40px; */
+	/* color:#02ccff; */
+}
+
+.scroll-select table tr td.content{
+	/* width:200px; */
+	width:64%;
+	font-size:90px;
+	/*  color:#fff;  */
+	/*color:#02ccff;*/
+	position:relative;
+}
+
+.scroll-select table tr td.content #unit{
+	width:50px;
+	height:40px;
+	
+	display:block;
+	position:absolute;
+	
+	right:0px;
+	top:28px;
+	
+	line-height:40px;
+	text-align:center;
+	
+	font-size:33px;
+}
+
+
+.scroll-select div{
+	float:left;	
+}
+
+.scroll-select div.prev,div.next{
+	width:30px;
+}
+
+.scroll-select .prev{
+	/* background-image:url("../images/arrow_left-1.png");
+	background-position:right center;
+	background-repeat:no-repeat; */
+	background-color:red;
+}
+
+.scroll-select .next{
+/* 	background-image:url("../images/arrow_right-1.png");
+	background-position:right center;
+	background-repeat:no-repeat; */
+	
+	background-color:red;
+}
+
+.scroll-select .items{
+	background-color:red;
+	overflow:hidden;
+}
+
+.scroll-select .items ul li{
+	list-style:none;
+	float:left;
+}

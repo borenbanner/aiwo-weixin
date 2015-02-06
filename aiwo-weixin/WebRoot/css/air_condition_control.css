@@ -1,0 +1,294 @@
+@CHARSET"UTF-8";
+ div#air-condition-header {
+    background-image: url(../images/air_control_bg.jpg);
+    position:absolute;
+    width:100%;
+    min-height:100%;
+    text-align:center;
+    background-size: cover;
+    background-position: center;
+    color: white;
+    padding-bottom: 20px;
+    /*padding-top:10px;*/
+}
+div#air-condition-header .current-temp {
+    color:#fff;
+    font-size:1.3em;
+    float:left;
+    margin:10px 0px 0px 10px;
+}
+div#air-condition-header .close-dialog {
+    position:absolute;
+    top:10px;
+    right:10px;
+}
+div#air-condition-header .air-turn-off {
+    width:44px;
+    height:48px;
+    position:absolute;
+    left:10px;
+    top:10px;
+}
+div#air-condition-header .air-name {
+    margin-top:40px;
+    font-size:1.5em;
+    color:#fff;
+    width:150px;
+    text-align: center;
+    margin-left:auto;
+    margin-right: auto;
+}
+div#air-condition-header #temp-area {
+    width:100%;
+    text-align: center;
+}
+/*#pattern-select{
+	border-bottom:1px solid #CDCDCD;
+}*/
+ .contorl div.contorl-title {
+    width:100%;
+    height:40px;
+    padding-left: 15px;
+    line-height:40px;
+    text-align: left;
+}
+.contorl div.contorl-title img {
+    width:28px;
+    height:28px;
+    padding:0px;
+    border-width:0px;
+    margin:-4px 10px 0px 10px;
+}
+.contorl div.contorl-title span {
+    font-size:1.0em;
+    color:#ffffff;
+    line-height: 40px;
+}
+.contorl div.contorl-item-lst {
+    /* margin:10px 20px 10px 20px; */
+    width: 70%;
+    height: 30px;
+    border:1px solid #ffffff;
+    border-radius:2px;
+    text-align:center;
+    color: #ffffff;
+    margin-left: 50px;
+    margin-right: auto;
+}
+.contorl div.contorl-item-lst span {
+    /* margin:10px 20px 10px 20px; */
+    text-align:center;
+    font-size:1.0em;
+    line-height:40px;
+    cursor:pointer;
+    color: #ffffff;
+}
+/*.contorl div.contorl-item-lst div {
+    width: 25%;
+    height: 40px;
+    line-height:40px;
+    text-align:center;
+    font-size:1.2em;
+    cursor:pointer;
+    float:left;
+    color: #ffffff;
+}*/
+ #air-on-off-select div.contorl-item-lst {
+    width: 30%;
+    margin-left: auto;
+    margin-right: auto;
+}
+#air-on-off-select div.contorl-item-lst .selected {
+    width: 50%;
+}
+#air-on-off-select div.contorl-item-lst .unselected {
+    width: 50%;
+}
+.selected {
+    width: 25%;
+    height: 30px;
+    line-height:30px;
+    font-size:1.0em;
+    cursor:pointer;
+    border:1px solid #ffffff;
+    border-radius:2px;
+    text-align:center;
+    background: #20CA3E;
+    color: #ffffff;
+    margin-top:-1px;
+    float:left;
+}
+.frist {
+    font-weight:100;
+    border-left: 0px;
+}
+.last {
+    border-right: 0px
+}
+.unselected {
+    width: 25%;
+    height: 30px;
+    line-height:30px;
+    font-size:1.0em;
+    cursor:pointer;
+    text-align:center;
+    color: #ffffff;
+    margin-top:-1px;
+    float:left;
+}
+/*remove-binding begin*/
+ .btn_unbind {
+    width: 40%;
+    height: 35px;
+    line-height:35px;
+    font-size:1.0em;
+    cursor:pointer;
+    border-radius:2px;
+    text-align:center;
+    background: #CA3538;
+    color: #ffffff;
+    margin:20px auto;
+}
+#remove-binding img {
+    width:12px;
+    height:12px;
+}
+/*remove-binding end*/
+
+/*user-binding begin*/
+#user-binding #user-binding-title {
+    width:100px;
+    height:30px;
+    line-height:30px;
+    text-align:center;
+    color:#fff;
+    background-color:#0099CC;
+}
+#user-binding .userinfo .user-element {
+    width:100%;
+    height:44px;
+    float:left;
+    margin-top: auto;
+    margin-bottom: auto;
+    border-bottom: solid 1px #e2e2e2;
+}
+#user-binding .userinfo .user-element div {
+    height:100%;
+}
+#user-binding .userinfo .user-element div.avatar {
+    /* padding:7px; */
+    padding:7px 7px 0px 7px;
+    float:left;
+}
+#user-binding .userinfo .user-element div.baseinfo {
+    padding-top:6px;
+    padding:7px 7px 0px 7px;
+    float:left;
+}
+#user-binding .userinfo .user-element span.user-reg-date {
+    color:#808080;
+}
+#user-binding .userinfo .user-element div.baseinfo .username {
+    font-size:1.1em;
+}
+#user-binding .userinfo .user-element div.user-enable {
+    float:right;
+    margin-top: 10px;
+    width: 30%;
+    height: 20px;
+    font-size:1.0em;
+    border-radius:2px;
+    text-align: center;
+    background: #199ACA;
+    color: #ffffff;
+    margin-right: 15px;
+    padding:0px 0px 0px px;
+}
+#user-binding .userinfo .user-element div.user-enable img {
+    width:25px;
+    height:25px;
+}
+/*pattern-choose end*/
+.lineTitle{
+	margin-top: 2em;
+	font-size: 1.1em;
+	overflow:hidden;
+}
+
+.control-icon{
+	font-size:3em;
+	text-align:center;
+}
+.controlpanel00ccff{
+	color:#00ccff;
+}
+.controlpanelff9900{
+	color:#ff9900;
+}
+.controlpanel00cc00{
+	color:#00cc00;
+}
+.controlpanelff99cc{
+	color:#ff99cc;
+}
+.controlpanel0099cc{
+	color:#0099cc;
+}
+
+.controlpanel00ccff .function-selection>span.active{
+	border-bottom:#02ccff 2px solid;
+}
+.controlpanelff9900 .function-selection>span.active{
+	border-bottom:#ff9900 2px solid;
+}
+.controlpanel00cc00 .function-selection>span.active{
+	border-bottom:#00cc00 2px solid;
+}
+.controlpanelff99cc .function-selection>span.active{
+	border-bottom:#ff99cc 2px solid;
+}
+.controlpanel0099cc .function-selection>span.active{
+	border-bottom:#0099cc 2px solid;
+}
+
+.controlpanel00ccff .col-xs-2.active{
+	color:#02ccff;
+}
+.controlpanelff9900 .col-xs-2.active{
+	color:#ff9900;
+}
+.controlpanel00cc00 .col-xs-2.active{
+	color:#00cc00;
+}
+.controlpanelff99cc .col-xs-2.active{
+	color:#ff99cc;
+}
+.controlpanel0099cc .col-xs-2.active{
+	color:#0099cc;
+}
+
+.function-selection {
+	margin-top:1em;
+}
+.model-select,.speed-set,.wind-direction-select,.function-select{
+	text-align:center;
+	overflow: hidden;
+}
+.control-area{
+	margin-top: 3em;
+}
+
+.control-area>div{
+	display:none;
+}
+.control-area .col-xs-2 {
+	float:none;
+	display:inline-block;
+	color:#ccc;
+}
+.defaultColor{
+	color:#ccc;
+}
+.select-icon{
+	width:100% !important;
+}
