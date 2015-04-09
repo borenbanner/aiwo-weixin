@@ -53,7 +53,8 @@ public class CoreService {
 			textMessage.setFromUserName(toUserName);
 			textMessage.setCreateTime(new Date().getTime());
 			textMessage.setMsgType(MessageUtil.RESP_MESSAGE_TYPE_TEXT);
-			// 事件推送
+			
+			// 事件推送s
 			if (msgType.equals(MessageUtil.REQ_MESSAGE_TYPE_EVENT)) {
 				// 事件类型
 				String eventType = requestMap.get("Event");
@@ -68,17 +69,18 @@ public class CoreService {
 							"GET", null);
 					System.out.println(jsonObject);
 					boolean flg = wx.scan(jsonObject);
-					if (flg) {
+					textMessage.setContent("您好，欢迎关注爱窝智慧家庭，智能家居，爱窝家庭！！");
+//					if (flg) {
 
-						textMessage.setContent("您好，欢迎关注爱窝智慧家庭，智能家居，爱窝家庭！！");
+//						textMessage.setContent("您好，欢迎关注爱窝智慧家庭，智能家居，爱窝家庭！！");
 
-					} else {
-						textMessage
-								.setContent("您好，欢迎关注爱窝智慧家庭，智能家居，爱窝家庭！！您的微信未绑定手机app请<a href=\"https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxa6309997e9c15c83&redirect_uri="
-										+ CommonUtil
-												.urlEncodeUTF8("http://www.59so.com/oauthServlet?state=1")
-										+ "&response_type=code&scope=snsapi_userinfo&state=1#wechat_redirect\">绑定</a>");
-					}
+//					} else {
+//						textMessage
+//								.setContent("您好，欢迎关注爱窝智慧家庭，智能家居，爱窝家庭！！您的微信未绑定手机app请<a href=\"https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxa6309997e9c15c83&redirect_uri="
+//										+ CommonUtil
+//												.urlEncodeUTF8("http://www.59so.com/oauthServlet?state=1")
+//										+ "&response_type=code&scope=snsapi_userinfo&state=1#wechat_redirect\">绑定</a>");
+//					}
 
 					// 将消息对象转换成xml
 					respXml = MessageUtil.messageToXml(textMessage);
