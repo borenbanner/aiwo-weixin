@@ -27,7 +27,9 @@ public class WeixinDao {
 			
 			if(!queryOpenId(jsonObject.getString("openid"))){
 				conn = DB.getConn();
-				String sql = "insert into weixin(openId,niceName,sex,country,provice,city) values(?,?,?,?,?,?)";
+				//正式生产环境扫描时不存入用户id信息 
+//				String sql = "insert into weixin(openId,niceName,sex,country,provice,city) values(?,?,?,?,?,?)";
+				String sql = "insert into weixin(openId,niceName,sex,country,provice,city,userId) values(?,?,?,?,?,?,?)";
 				pStmt = conn.prepareStatement(sql);
 				pStmt.setString(1, jsonObject.getString("openid"));
 				pStmt.setString(2, jsonObject.getString("nickname"));
@@ -35,6 +37,8 @@ public class WeixinDao {
 				pStmt.setString(4, jsonObject.getString("country"));
 				pStmt.setString(5, jsonObject.getString("province"));
 				pStmt.setString(6, jsonObject.getString("city"));
+				//演示默认用户
+				pStmt.setString(7, "1");
 				pStmt.execute();
 			}
 		} catch (SQLException e) {
