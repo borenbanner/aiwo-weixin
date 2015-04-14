@@ -10,7 +10,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-<title>海尔空气MINI</title>
+<title>爱窝微商城</title>
 <meta name="viewport"
 	content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <link type="text/css" href="css/bootstrap.min.css" rel="stylesheet">
@@ -39,10 +39,17 @@
 				$(".item").html("<img src=\""+obj.proImage+"\"  class=\"img\">");
 				$(".dinfo > p").text(obj.proName);
 				$("#price").text(obj.proPrice);
-				$("#oldprice").text(parseInt(obj.proPrice)+300) ;
+				$("#oldprice").text(parseInt(obj.proPrice)+100) ;
 				$("#content").html(obj.proDetail);
 			}
 		});
+		
+		$(".gopay").click(function(){
+		
+			window.location.href='<%=basePath%>/pay/payServlet?id=' + id;
+			
+		});
+		
 	});
 </script>
 <style>
@@ -103,6 +110,12 @@
 	margin-left: 15px;
 	margin-right: 15px;
 }
+
+.more-img img {
+	display: block;
+	height: auto;
+	max-width: 100%;
+}
 </style>
 </head>
 <body style="">
@@ -110,23 +123,20 @@
 		<div id="roll-images" class="carousel slide">
 			<div class="carousel-inner">
 
-				<div class="item active">
-					
-				</div>
+				<div class="item active"></div>
 			</div>
 		</div>
 	</div>
 	<div class="row">
 		<div class="col-xs-8 dinfo">
-			<p style="font-size:15px;margin:0;padding-top:4px;">海尔空气MINI</p>
+			<p style="font-size:15px;margin:0;padding-top:4px;"></p>
 		</div>
 		<div class="col-xs-4 dprice gopay">
 			<p class="center " style="font-size:18px;padding-top:4px;">
 				￥<span id="price"></span>
 			</p>
 			<p class="center " style="font-size:9px;">
-				<strike>市场价￥<span id="oldprice"></span>
-				</strike>
+				<strike>市场价￥<span id="oldprice"></span> </strike>
 			</p>
 		</div>
 	</div>
@@ -151,7 +161,7 @@
 						<tr>
 							<td style="width: 36%">
 								<button class="btn btn-default  btn-block buy gopay"
-									style="text-align:center;height:40px;border:0;	">
+									style="text-align:center;height:40px;border:0;">
 									<div class="center">
 										<div style="float:left;">
 											<img alt="" src="image/haw_81.png"

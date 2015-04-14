@@ -22,7 +22,7 @@ public class Config {
 	public static final String APPSECRET = "259b1a189b3b8375970c57951ae80617";
 	public static final String URL = "http%3A%2F%2Fwww.59so.com%2FoauthServlet%3Fstate%3DKEY";
 	public static final String QUERYSINGLE = "querysigle";
-	public static final String SITE = "http://www.59so.com";
+	public static final String SITE = "http://weixin.eworlding.com";
 	public static String WEBURL = "https%3A%2F%2Fopen.weixin.qq.com%2Fconnect%2Foauth2%2Fauthorize%3Fappid%3DAPPID%26redirect_uri%3DURLURL%26response_type%3Dcode%26scope%3Dsnsapi_userinfo%26state%3D1%23wechat_redirect";
 
 	/**

@@ -3,8 +3,12 @@ package com.aiwo.util;
 import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.security.MessageDigest;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -20,7 +24,6 @@ import com.aiwo.pojo.WeixinGroup;
 import com.aiwo.pojo.WeixinOauth2Token;
 import com.aiwo.pojo.WeixinUserInfo;
 import com.aiwo.pojo.WeixinUserList;
-
 
 /**
  * 高级接口工具类
@@ -319,37 +322,39 @@ public class AdvancedUtil {
 	 *            场景ID
 	 * @return WeixinQRCode
 	 */
-//	public static WeixinQRCode createTemporaryQRCode(String accessToken,
-//			int expireSeconds, int sceneId) {
-//		WeixinQRCode weixinQRCode = null;
-//		// 拼接请求地址
-//		String requestUrl = "https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=ACCESS_TOKEN";
-//		requestUrl = requestUrl.replace("ACCESS_TOKEN", accessToken);
-//		// 需要提交的json数据
-//		String jsonMsg = "{\"expire_seconds\": %d, \"action_name\": \"QR_SCENE\", \"action_info\": {\"scene\": {\"scene_id\": %d}}}";
-//		// 创建临时带参二维码
-//		JSONObject jsonObject = CommonUtil.httpsRequest(requestUrl, "POST",
-//				String.format(jsonMsg, expireSeconds, sceneId));
-//
-//		if (null != jsonObject) {
-//			try {
-//				weixinQRCode = new WeixinQRCode();
-//				weixinQRCode.setTicket(jsonObject.getString("ticket"));
-//				weixinQRCode.setExpireSeconds(jsonObject
-//						.getInt("expire_seconds"));
-//				log.info("创建临时带参二维码成功 ticket:{} expire_seconds:{}",
-//						weixinQRCode.getTicket(),
-//						weixinQRCode.getExpireSeconds());
-//			} catch (Exception e) {
-//				weixinQRCode = null;
-//				int errorCode = jsonObject.getInt("errcode");
-//				String errorMsg = jsonObject.getString("errmsg");
-//				log.error("创建临时带参二维码失败 errcode:{} errmsg:{}", errorCode,
-//						errorMsg);
-//			}
-//		}
-//		return weixinQRCode;
-//	}
+	// public static WeixinQRCode createTemporaryQRCode(String accessToken,
+	// int expireSeconds, int sceneId) {
+	// WeixinQRCode weixinQRCode = null;
+	// // 拼接请求地址
+	// String requestUrl =
+	// "https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token=ACCESS_TOKEN";
+	// requestUrl = requestUrl.replace("ACCESS_TOKEN", accessToken);
+	// // 需要提交的json数据
+	// String jsonMsg =
+	// "{\"expire_seconds\": %d, \"action_name\": \"QR_SCENE\", \"action_info\": {\"scene\": {\"scene_id\": %d}}}";
+	// // 创建临时带参二维码
+	// JSONObject jsonObject = CommonUtil.httpsRequest(requestUrl, "POST",
+	// String.format(jsonMsg, expireSeconds, sceneId));
+	//
+	// if (null != jsonObject) {
+	// try {
+	// weixinQRCode = new WeixinQRCode();
+	// weixinQRCode.setTicket(jsonObject.getString("ticket"));
+	// weixinQRCode.setExpireSeconds(jsonObject
+	// .getInt("expire_seconds"));
+	// log.info("创建临时带参二维码成功 ticket:{} expire_seconds:{}",
+	// weixinQRCode.getTicket(),
+	// weixinQRCode.getExpireSeconds());
+	// } catch (Exception e) {
+	// weixinQRCode = null;
+	// int errorCode = jsonObject.getInt("errcode");
+	// String errorMsg = jsonObject.getString("errmsg");
+	// log.error("创建临时带参二维码失败 errcode:{} errmsg:{}", errorCode,
+	// errorMsg);
+	// }
+	// }
+	// return weixinQRCode;
+	// }
 
 	/**
 	 * 创建永久带参二维码
@@ -602,6 +607,107 @@ public class AdvancedUtil {
 	}
 
 	/**
+	 * 
+	 * 
+	 * 通过SHA1加密获取签名
+	 * 
+	 * 
+	 * 
+	 * @param prepareSign
+	 *            加密字符串
+	 * @return 返回加密后歉签名字符串
+	 */
+	public static String getaddrSign(String prepareSign) {
+
+		if (prepareSign == null || prepareSign.length() == 0) {
+
+			return null;
+		}
+
+		try {
+			MessageDigest mdTemp = MessageDigest.getInstance("SHA1");
+			mdTemp.update(prepareSign.getBytes("utf-8"));
+
+			byte[] md = mdTemp.digest();
+			String result = "";
+			String tmp = null;
+			for (int i = 0; i < md.length; i++) {
+				tmp = (Integer.toHexString(md[i] & 0xFF));
+				if (tmp.length() == 1) {
+					result += "0";
+				}
+				result += tmp;
+			}
+			return result;
+		} catch (Exception e) {
+			return null;
+		}
+
+	}
+
+	/**
+	 * 
+	 * 
+	 * <p>
+	 * 随机字符串
+	 * </p>
+	 * 
+	 * 
+	 * 
+	 * @return
+	 */
+
+	public static String getNonceStr() {
+
+		String ch = "0123456789";
+		int len = ch.length();
+		String noceStr = "";
+		for (int i = 0; i < 6; i++) {
+			noceStr += ch.charAt((int) Math.floor(Math.random() * len));
+		}
+
+		return noceStr;
+	}
+
+	/**
+	 * 
+	 * 
+	 * 
+	 * <p>
+	 * 微信支付随机串
+	 * </p>
+	 * 
+	 * 
+	 * @return
+	 */
+	public static String getNoceStrPay() {
+
+		String ch = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+		int len = ch.length();
+		String noceStrPay = "";
+		for (int i = 0; i < 32; i++) {
+			noceStrPay += ch.charAt((int) Math.floor(Math.random() * len));
+		}
+
+		return noceStrPay;
+	}
+
+	/**
+	 * 
+	 * <p>
+	 * 微信支付生成时间戳
+	 * </p>
+	 * 
+	 * 
+	 * 
+	 * @return
+	 */
+	public static String getTimeStamp() {
+
+		return String.valueOf(System.currentTimeMillis() / 1000);
+	}
+
+	/**
 	 * 修改分组名
 	 * 
 	 * @param accessToken
@@ -683,97 +789,98 @@ public class AdvancedUtil {
 	 * @param mediaFileUrl
 	 *            媒体文件的url
 	 */
-//	public static WeixinMedia uploadMedia(String accessToken, String type,
-//			String mediaFileUrl) {
-//		WeixinMedia weixinMedia = null;
-//		// 拼装请求地址
-//		String uploadMediaUrl = "http://file.api.weixin.qq.com/cgi-bin/media/upload?access_token=ACCESS_TOKEN&type=TYPE";
-//		uploadMediaUrl = uploadMediaUrl.replace("ACCESS_TOKEN", accessToken)
-//				.replace("TYPE", type);
-//
-//		// 定义数据分隔符
-//		String boundary = "------------7da2e536604c8";
-//		try {
-//			URL uploadUrl = new URL(uploadMediaUrl);
-//			HttpURLConnection uploadConn = (HttpURLConnection) uploadUrl
-//					.openConnection();
-//			uploadConn.setDoOutput(true);
-//			uploadConn.setDoInput(true);
-//			uploadConn.setRequestMethod("POST");
-//			// 设置请求头Content-Type
-//			uploadConn.setRequestProperty("Content-Type",
-//					"multipart/form-data;boundary=" + boundary);
-//			// 获取媒体文件上传的输出流（往微信服务器写数据）
-//			OutputStream outputStream = uploadConn.getOutputStream();
-//
-//			URL mediaUrl = new URL(mediaFileUrl);
-//			HttpURLConnection meidaConn = (HttpURLConnection) mediaUrl
-//					.openConnection();
-//			meidaConn.setDoOutput(true);
-//			meidaConn.setRequestMethod("GET");
-//
-//			// 从请求头中获取内容类型
-//			String contentType = meidaConn.getHeaderField("Content-Type");
-//			// 根据内容类型判断文件扩展名
-//			String fileExt = CommonUtil.getFileExt(contentType);
-//			// 请求体开始
-//			outputStream.write(("--" + boundary + "\r\n").getBytes());
-//			outputStream
-//					.write(String
-//							.format("Content-Disposition: form-data; name=\"media\"; filename=\"file1%s\"\r\n",
-//									fileExt).getBytes());
-//			outputStream.write(String.format("Content-Type: %s\r\n\r\n",
-//					contentType).getBytes());
-//
-//			// 获取媒体文件的输入流（读取文件）
-//			BufferedInputStream bis = new BufferedInputStream(
-//					meidaConn.getInputStream());
-//			byte[] buf = new byte[8096];
-//			int size = 0;
-//			while ((size = bis.read(buf)) != -1) {
-//				// 将媒体文件写到输出流（往微信服务器写数据）
-//				outputStream.write(buf, 0, size);
-//			}
-//			// 请求体结束
-//			outputStream.write(("\r\n--" + boundary + "--\r\n").getBytes());
-//			outputStream.close();
-//			bis.close();
-//			meidaConn.disconnect();
-//
-//			// 获取媒体文件上传的输入流（从微信服务器读数据）
-//			InputStream inputStream = uploadConn.getInputStream();
-//			InputStreamReader inputStreamReader = new InputStreamReader(
-//					inputStream, "utf-8");
-//			BufferedReader bufferedReader = new BufferedReader(
-//					inputStreamReader);
-//			StringBuffer buffer = new StringBuffer();
-//			String str = null;
-//			while ((str = bufferedReader.readLine()) != null) {
-//				buffer.append(str);
-//			}
-//			bufferedReader.close();
-//			inputStreamReader.close();
-//			// 释放资源
-//			inputStream.close();
-//			inputStream = null;
-//			uploadConn.disconnect();
-//
-//			// 使用JSON-lib解析返回结果
-//			JSONObject jsonObject = JSONObject.fromObject(buffer.toString());
-//			weixinMedia = new WeixinMedia();
-//			weixinMedia.setType(jsonObject.getString("type"));
-//			// type等于thumb时的返回结果和其它类型不一样
-//			if ("thumb".equals(type))
-//				weixinMedia.setMediaId(jsonObject.getString("thumb_media_id"));
-//			else
-//				weixinMedia.setMediaId(jsonObject.getString("media_id"));
-//			weixinMedia.setCreatedAt(jsonObject.getInt("created_at"));
-//		} catch (Exception e) {
-//			weixinMedia = null;
-//			log.error("上传媒体文件失败：{}", e);
-//		}
-//		return weixinMedia;
-//	}
+	// public static WeixinMedia uploadMedia(String accessToken, String type,
+	// String mediaFileUrl) {
+	// WeixinMedia weixinMedia = null;
+	// // 拼装请求地址
+	// String uploadMediaUrl =
+	// "http://file.api.weixin.qq.com/cgi-bin/media/upload?access_token=ACCESS_TOKEN&type=TYPE";
+	// uploadMediaUrl = uploadMediaUrl.replace("ACCESS_TOKEN", accessToken)
+	// .replace("TYPE", type);
+	//
+	// // 定义数据分隔符
+	// String boundary = "------------7da2e536604c8";
+	// try {
+	// URL uploadUrl = new URL(uploadMediaUrl);
+	// HttpURLConnection uploadConn = (HttpURLConnection) uploadUrl
+	// .openConnection();
+	// uploadConn.setDoOutput(true);
+	// uploadConn.setDoInput(true);
+	// uploadConn.setRequestMethod("POST");
+	// // 设置请求头Content-Type
+	// uploadConn.setRequestProperty("Content-Type",
+	// "multipart/form-data;boundary=" + boundary);
+	// // 获取媒体文件上传的输出流（往微信服务器写数据）
+	// OutputStream outputStream = uploadConn.getOutputStream();
+	//
+	// URL mediaUrl = new URL(mediaFileUrl);
+	// HttpURLConnection meidaConn = (HttpURLConnection) mediaUrl
+	// .openConnection();
+	// meidaConn.setDoOutput(true);
+	// meidaConn.setRequestMethod("GET");
+	//
+	// // 从请求头中获取内容类型
+	// String contentType = meidaConn.getHeaderField("Content-Type");
+	// // 根据内容类型判断文件扩展名
+	// String fileExt = CommonUtil.getFileExt(contentType);
+	// // 请求体开始
+	// outputStream.write(("--" + boundary + "\r\n").getBytes());
+	// outputStream
+	// .write(String
+	// .format("Content-Disposition: form-data; name=\"media\"; filename=\"file1%s\"\r\n",
+	// fileExt).getBytes());
+	// outputStream.write(String.format("Content-Type: %s\r\n\r\n",
+	// contentType).getBytes());
+	//
+	// // 获取媒体文件的输入流（读取文件）
+	// BufferedInputStream bis = new BufferedInputStream(
+	// meidaConn.getInputStream());
+	// byte[] buf = new byte[8096];
+	// int size = 0;
+	// while ((size = bis.read(buf)) != -1) {
+	// // 将媒体文件写到输出流（往微信服务器写数据）
+	// outputStream.write(buf, 0, size);
+	// }
+	// // 请求体结束
+	// outputStream.write(("\r\n--" + boundary + "--\r\n").getBytes());
+	// outputStream.close();
+	// bis.close();
+	// meidaConn.disconnect();
+	//
+	// // 获取媒体文件上传的输入流（从微信服务器读数据）
+	// InputStream inputStream = uploadConn.getInputStream();
+	// InputStreamReader inputStreamReader = new InputStreamReader(
+	// inputStream, "utf-8");
+	// BufferedReader bufferedReader = new BufferedReader(
+	// inputStreamReader);
+	// StringBuffer buffer = new StringBuffer();
+	// String str = null;
+	// while ((str = bufferedReader.readLine()) != null) {
+	// buffer.append(str);
+	// }
+	// bufferedReader.close();
+	// inputStreamReader.close();
+	// // 释放资源
+	// inputStream.close();
+	// inputStream = null;
+	// uploadConn.disconnect();
+	//
+	// // 使用JSON-lib解析返回结果
+	// JSONObject jsonObject = JSONObject.fromObject(buffer.toString());
+	// weixinMedia = new WeixinMedia();
+	// weixinMedia.setType(jsonObject.getString("type"));
+	// // type等于thumb时的返回结果和其它类型不一样
+	// if ("thumb".equals(type))
+	// weixinMedia.setMediaId(jsonObject.getString("thumb_media_id"));
+	// else
+	// weixinMedia.setMediaId(jsonObject.getString("media_id"));
+	// weixinMedia.setCreatedAt(jsonObject.getInt("created_at"));
+	// } catch (Exception e) {
+	// weixinMedia = null;
+	// log.error("上传媒体文件失败：{}", e);
+	// }
+	// return weixinMedia;
+	// }
 
 	/**
 	 * 下载媒体文件
@@ -785,172 +892,94 @@ public class AdvancedUtil {
 	 * @param savePath
 	 *            文件在服务器上的存储路径
 	 * @return
+	 * @throws UnsupportedEncodingException 
 	 */
-//	public static String getMedia(String accessToken, String mediaId,
-//			String savePath) {
-//		String filePath = null;
-//		// 拼接请求地址
-//		String requestUrl = "http://file.api.weixin.qq.com/cgi-bin/media/get?access_token=ACCESS_TOKEN&media_id=MEDIA_ID";
-//		requestUrl = requestUrl.replace("ACCESS_TOKEN", accessToken).replace(
-//				"MEDIA_ID", mediaId);
-//		System.out.println(requestUrl);
-//		try {
-//			URL url = new URL(requestUrl);
-//			HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-//			conn.setDoInput(true);
-//			conn.setRequestMethod("GET");
-//
-//			if (!savePath.endsWith("/")) {
-//				savePath += "/";
-//			}
-//			// 根据内容类型获取扩展名
-//			String fileExt = CommonUtil.getFileExt(conn
-//					.getHeaderField("Content-Type"));
-//			// 将mediaId作为文件名
-//			filePath = savePath + mediaId + fileExt;
-//
-//			BufferedInputStream bis = new BufferedInputStream(
-//					conn.getInputStream());
-//			FileOutputStream fos = new FileOutputStream(new File(filePath));
-//			byte[] buf = new byte[8096];
-//			int size = 0;
-//			while ((size = bis.read(buf)) != -1)
-//				fos.write(buf, 0, size);
-//			fos.close();
-//			bis.close();
-//
-//			conn.disconnect();
-//			log.info("下载媒体文件成功，filePath=" + filePath);
-//		} catch (Exception e) {
-//			filePath = null;
-//			log.error("下载媒体文件失败：{}", e);
-//		}
-//		return filePath;
-//	}
+	// public static String getMedia(String accessToken, String mediaId,
+	// String savePath) {
+	// String filePath = null;
+	// // 拼接请求地址
+	// String requestUrl =
+	// "http://file.api.weixin.qq.com/cgi-bin/media/get?access_token=ACCESS_TOKEN&media_id=MEDIA_ID";
+	// requestUrl = requestUrl.replace("ACCESS_TOKEN", accessToken).replace(
+	// "MEDIA_ID", mediaId);
+	// System.out.println(requestUrl);
+	// try {
+	// URL url = new URL(requestUrl);
+	// HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+	// conn.setDoInput(true);
+	// conn.setRequestMethod("GET");
+	//
+	// if (!savePath.endsWith("/")) {
+	// savePath += "/";
+	// }
+	// // 根据内容类型获取扩展名
+	// String fileExt = CommonUtil.getFileExt(conn
+	// .getHeaderField("Content-Type"));
+	// // 将mediaId作为文件名
+	// filePath = savePath + mediaId + fileExt;
+	//
+	// BufferedInputStream bis = new BufferedInputStream(
+	// conn.getInputStream());
+	// FileOutputStream fos = new FileOutputStream(new File(filePath));
+	// byte[] buf = new byte[8096];
+	// int size = 0;
+	// while ((size = bis.read(buf)) != -1)
+	// fos.write(buf, 0, size);
+	// fos.close();
+	// bis.close();
+	//
+	// conn.disconnect();
+	// log.info("下载媒体文件成功，filePath=" + filePath);
+	// } catch (Exception e) {
+	// filePath = null;
+	// log.error("下载媒体文件失败：{}", e);
+	// }
+	// return filePath;
+	// }
 
-	public static void main(String args[]) {
-		// 获取接口访问凭证
-		String accessToken = CommonUtil.getToken("APPID", "APPSECRET")
-				.getAccessToken();
+	public static void main(String args[]) throws UnsupportedEncodingException {
+		Map map = new TreeMap();
+		map.put("appid", "wxa6309997e9c15c83");
+		map.put("mch_id", "1234087902");
+		map.put("nonce_str", "G3R1aKxF4UqkuTjzWK3Vxj2CL6VJhTsS");
+		map.put("body", "CHOCO LIGHT巧克氛围灯");
+		map.put("out_trade_no", "20151428915851");
+		map.put("total_fee", "15000");
+		map.put("spbill_create_ip", "111.161.62.191");
+		map.put("notify_url", "http://weixin.eworlding.com/pay/notifyServlet/");
+		map.put("trade_type", "JSAPI");
+		map.put("openid", "oWOl7ji9PSDkDjgIv_9fohHBnn84");
 
-		/**
-		 * 发送客服消息（文本消息）
-		 */
-		// 组装文本客服消息
-//		String jsonTextMsg = makeTextCustomMessage(
-//				"oEdzejiHCDqafJbz4WNJtWTMbDcE",
-//				"点击查看<a href=\"http://blog.csdn.net/lyq8479\">柳峰的博客</a>");
-//		// 发送客服消息
-//		sendCustomMessage(accessToken, jsonTextMsg);
-
-		/**
-		 * 发送客服消息（图文消息）
-		 */
-//		Article article1 = new Article();
-//		article1.setTitle("微信上也能斗地主");
-//		article1.setDescription("");
-//		article1.setPicUrl("http://www.egouji.com/xiaoq/game/doudizhu_big.png");
-//		article1.setUrl("http://resource.duopao.com/duopao/games/small_games/weixingame/Doudizhu/doudizhu.htm");
-//		Article article2 = new Article();
-//		article2.setTitle("傲气雄鹰\n80后不得不玩的经典游戏");
-//		article2.setDescription("");
-//		article2.setPicUrl("http://www.egouji.com/xiaoq/game/aoqixiongying.png");
-//		article2.setUrl("http://resource.duopao.com/duopao/games/small_games/weixingame/Plane/aoqixiongying.html");
-//		List<Article> list = new ArrayList<Article>();
-//		list.add(article1);
-//		list.add(article2);
-//		// 组装图文客服消息
-//		String jsonNewsMsg = makeNewsCustomMessage(
-//				"oEdzejiHCDqafJbz4WNJtWTMbDcE", list);
-//		// 发送客服消息
-//		sendCustomMessage(accessToken, jsonNewsMsg);
-
-		/**
-		 * 创建临时二维码
-		 */
-//		WeixinQRCode weixinQRCode = createTemporaryQRCode(accessToken, 900,
-//				111111);
-//		// 临时二维码的ticket
-//		System.out.println(weixinQRCode.getTicket());
-//		// 临时二维码的有效时间
-//		System.out.println(weixinQRCode.getExpireSeconds());
-
-		/**
-		 * 根据ticket换取二维码
-		 */
-		String ticket = "gQEg7zoAAAAAAAAAASxodHRwOi8vd2VpeGluLnFxLmNvbS9xL2lIVVJ3VmJsTzFsQ0ZuQ0Y1bG5WAAIEW35+UgMEAAAAAA==";
-		String savePath = "G:/download";
-		// 根据ticket换取二维码
-		getQRCode(ticket, savePath);
-
-		/**
-		 * 获取用户信息
-		 */
-		WeixinUserInfo user = getUserInfo(accessToken,
-				"oEdzejiHCDqafJbz4WNJtWTMbDcE");
-		System.out.println("OpenID：" + user.getOpenId());
-		System.out.println("关注状态：" + user.getSubscribe());
-		System.out.println("关注时间：" + user.getSubscribeTime());
-		System.out.println("昵称：" + user.getNickname());
-		System.out.println("性别：" + user.getSex());
-		System.out.println("国家：" + user.getCountry());
-		System.out.println("省份：" + user.getProvince());
-		System.out.println("城市：" + user.getCity());
-		System.out.println("语言：" + user.getLanguage());
-		System.out.println("头像：" + user.getHeadImgUrl());
-
-		/**
-		 * 获取关注者列表
-		 */
-		WeixinUserList weixinUserList = getUserList(accessToken, "");
-		System.out.println("总关注用户数：" + weixinUserList.getTotal());
-		System.out.println("本次获取用户数：" + weixinUserList.getCount());
-		System.out.println("OpenID列表："
-				+ weixinUserList.getOpenIdList().toString());
-		System.out.println("next_openid：" + weixinUserList.getNextOpenId());
-
-		/**
-		 * 查询分组
-		 */
-		List<WeixinGroup> groupList = getGroups(accessToken);
-		// 循环输出各分组信息
-		for (WeixinGroup group : groupList) {
-			System.out.println(String.format("ID：%d 名称：%s 用户数：%d",
-					group.getId(), group.getName(), group.getCount()));
-		}
-
-		/**
-		 * 创建分组
-		 */
-		WeixinGroup group = createGroup(accessToken, "公司员工");
-		System.out.println(String.format("成功创建分组：%s id：%d", group.getName(),
-				group.getId()));
-
-		/**
-		 * 修改分组名
-		 */
-		updateGroup(accessToken, 100, "同事");
-
-		/**
-		 * 移动用户分组
-		 */
-		updateMemberGroup(accessToken, "oEdzejiHCDqafJbz4WNJtWTMbDcE", 100);
-
-		/**
-		 * 上传多媒体文件
-		 */
-//		WeixinMedia weixinMedia = uploadMedia(accessToken, "voice",
-//				"http://localhost:8080/weixinmpapi/test.mp3");
-//		System.out.println(weixinMedia.getMediaId());
-//		System.out.println(weixinMedia.getType());
-//		System.out.println(weixinMedia.getCreatedAt());
-
-		/**
-		 * 下载多媒体文件
-		 */
-//		getMedia(
-//				accessToken,
-//				"N7xWhOGYSLWUMPzVcGnxKFbhXeD_lLT5sXxyxDGEsCzWIB2CcUijSeQOYjWLMpcn",
-//				"G:/download");
+		String s = AdvancedUtil.getSign(map);
+		System.out.println(s);
 	}
+
+	/**
+	 * 
+	 * 
+	 * 创建预支付签名
+	 * 
+	 * @param map
+	 * @return
+	 * @throws UnsupportedEncodingException 
+	 */
+	public static String getSign(Map<String, String> map) throws UnsupportedEncodingException {
+		StringBuffer sb = new StringBuffer();
+
+		for (Map.Entry<String, String> m : map.entrySet()) {
+			sb.append(m.getKey() + "=" + m.getValue() + "&");
+		}
+		sb.append("key=jfaeiNFA8inoaenFOa4neanFIOAEnfoa");
+		System.out.println("md5 sb:" + sb.toString());
+		String signsssss = Md5.getPwd(sb.toString()).toUpperCase() ;
+		System.out.println("qianming"+signsssss);
+		System.out.println("packge签名:" + signsssss);
+
+		return signsssss;
+	}
+
+	
+
+	
+
 }

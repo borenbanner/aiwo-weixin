@@ -76,6 +76,7 @@
 <!-- 				<li><a href="technology.jsp"><i class="icon-tasks"></i>技术支持</a> -->
 				</li>
 				<li><a href="news.jsp"><i class="icon-magic"></i>最新咨询</a>
+				<li><a href="bill.jsp"><i class="icon-magic"></i>订单查看</a></li>
 				</li>
 			</ul>
 		</div>

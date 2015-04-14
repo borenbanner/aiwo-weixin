@@ -20,11 +20,15 @@ import com.aiwo.message.req.VoiceMessage;
 import com.aiwo.message.resp.Article;
 import com.aiwo.message.resp.MusicMessage;
 import com.aiwo.message.resp.NewsMessage;
+import com.aiwo.pojo.Prepay;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.core.util.QuickWriter;
 import com.thoughtworks.xstream.io.HierarchicalStreamWriter;
+import com.thoughtworks.xstream.io.xml.DomDriver;
 import com.thoughtworks.xstream.io.xml.PrettyPrintWriter;
 import com.thoughtworks.xstream.io.xml.XppDriver;
+
+
 
 /**
  * ��Ϣ���?����
@@ -199,4 +203,28 @@ public class MessageUtil {
 		xstream.alias("item", new Article().getClass());
 		return xstream.toXML(newsMessage);
 	}
+	
+	
+	public static String ObejctToxml(Object o){
+		
+		xstream.alias("xml", o.getClass());
+		
+		return xstream.toXML(o) ;
+		
+	}
+
+	public static Object xmlToObject(String xml,Class<?> lazz) {
+		XStream xStream = new XStream(new DomDriver()) ;
+		
+		xStream.alias("xml",lazz) ;
+		return xStream.fromXML(xml) ;
+	}
+	
+	
+//	public static void main(String[] args) {
+//		Prepay p = new Prepay("appid"," mch_id"," nonce_str"," sign"," body"," out_trade_no",1," spbill_create_ip"," notify_url"," trade_type"," openid");
+//		String xml = MessageUtil.ObejctToxml(p) ;
+//		Prepay p2 = (Prepay) MessageUtil.xmlToObject(xml, new Prepay()) ;
+//		System.out.println(p2.getAppid());
+//	}
 }
