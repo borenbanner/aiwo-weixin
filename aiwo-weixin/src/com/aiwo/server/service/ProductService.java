@@ -3,13 +3,16 @@ package com.aiwo.server.service;
 import java.util.List;
 import java.util.Map;
 
+import com.aiwo.server.dao.AddrDao;
 import com.aiwo.server.dao.ProductDao;
+import com.aiwo.server.pojo.Addr;
 import com.aiwo.server.pojo.Product;
 
 public class ProductService {
 
 	
 	private ProductDao productDao = new ProductDao();
+	private AddrDao addrDao = new AddrDao();
 	
 	/**
 	 * 
@@ -95,6 +98,19 @@ public class ProductService {
 
 	public void delete(String proId) {
 		this.productDao.delete(proId) ;
+	}
+
+
+	/**
+	 * 
+	 * 获取用户下的
+	 * @param openId
+	 * @return
+	 */
+	public Addr getAddr(String openId) {
+		
+		return this.addrDao.queryAddr(openId);
+		
 	}		
 	
 	

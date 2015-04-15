@@ -5,8 +5,8 @@
 			+ request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
 %>
-<!DOCTYPE html">
-<html>
+<!DOCTYPE html >
+<html >
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title></title>
@@ -14,6 +14,8 @@
 <meta name="viewport"
 	content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <link type="text/css" href="../css/bootstrap.min.css" rel="stylesheet">
+<link type="text/css" href="../css/trade_3bffe65a06.css"
+	rel="stylesheet">
 <script type="text/javascript" src="../js/jquery-1.10.2.min.js"></script>
 <script type="text/javascript" src="../js/bootstrap.min.js"></script>
 <script type="text/javascript" src="../js/sha1.js"></script>
@@ -123,127 +125,105 @@
 body {
 	background-color: #f0f0f0;
 }
-.addr_a{
- background-color: #FFFFFF;
-    background-image: none;
-    border: 1px solid #CCCCCC;
-    border-radius: 4px;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
-    color: #555555;
-    display: block;
-    font-size: 14px;
-    height: 34px;
-    line-height: 1.42857;
-    padding: 6px 12px;
-    transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
-    vertical-align: middle;
-    width: 100%;
+
+.addr_a {
+	background-color: #FFFFFF;
+	background-image: none;
+	border: 1px solid #CCCCCC;
+	border-radius: 4px;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.075) inset;
+	color: #555555;
+	display: block;
+	font-size: 14px;
+	height: 34px;
+	line-height: 1.42857;
+	padding: 6px 12px;
+	transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s
+		ease-in-out 0s;
+	vertical-align: middle;
+	width: 100%;
+}
+.address-fm-title{
+	background: #FF3399;
+	color: #ffffff;
 }
 </style>
 <script type="text/javascript">
 	$(function() {
-
-		var timeStamp = getTimeStamp();
-		var nonceStr = getNonceStr();
-		
-		 var signparas = $.extend(signparasobj, {
-	            "accesstoken": getaccesstoken(),
-	            "noncestr": nonceStr,
-	            "timestamp": timeStamp,
-	            "url": window.location.href
-	        });
-		 
-		 var signstring = getSign(perapara(signparas));
-		 alert(signstring) ;
-		 $("#getAddr").click(function(){
-			 WeixinJSBridge.invoke('editAddress',
-	                    {
-	                        "appId": getappid(),
-	                        "scope": "jsapi_address",
-	                        "signType": "sha1",
-	                        "addrSign": signstring,
-	                        "timeStamp": nonceStr,
-	                        "nonceStr": timeStamp,
-	                    },function(res){
-	                    	alert(res.err_msg);
-	                    	if (res.err_msg == 'edit_address:ok') {
-								var addr = res.proviceFirstStageName
-										+ "，"
-										+ res.addressCitySecondStageName
-										+ "，"
-										+ res.addressCountiesThirdStageName
-										+ "，"
-										+ res.addressDetailInfo
-										+ "， "
-										+ res.addressPostalCode;
-								;
-								userName = res.userName;
-								phoneNumber = res.telNumber;
-								address = addr;
-								getAddress = true;
-								document
-										.getElementById("address").innerHTML = addr;
-								document
-										.getElementById("nameAndPhone").innerHTML = res.userName
-										+ "，"
-										+ res.telNumber;
-							} else {
-								address = "";
-								getAddress = false;
-								document
-										.getElementById("address").innerHTML = "获取地址失败，请重新点击";
-								document
-										.getElementById("nameAndPhone").innerHTML = "";
-							}
-	                    	
-	                    });
-			 
-		 }) ;
+		$("#getAddr,#addrcancel").click(function() {
+				$("#overAddr,#overPay").toggle()  ;	
+		});
+		$("#saveAddr").click(function(){
+			 $.ajax({
+				  type:"POST",
+				  url :"addrServelt",
+				  data:{"openId" : '${openId}',
+				  "userName":$("input[name=user_name]").val(),
+				  "tel"	:$("input[name=tel]").val(),
+				  "addr" :$("input[name=address_detail]").val(),
+				  "postal_code" :$("input[name=postal_code]").val()				  
+				  },
+				  dataType:"json",
+				  success:function(data){
+					$("#address").html($("input[name=address_detail]").val());
+					$("#nameAndPhone").html($("input[name=user_name]").val()+"/"+$("input[name=tel]").val());
+				  }
+			  });
+		}) ;
 		$("#getBrandWCPayRequest")
 				.click(
 						function() {
-							$.ajax({
+							$
+									.ajax({
 										type : "POST",
 										url : "/pay/prepayIdServlet",
-										data :{"openId":'${openId}',"total_fee":$("#total_price").html(),"body":$("#bodydes").html(),"productid":$("#productid").val()}, //参数自己根据业务定义
+										data : {
+											"openId" : '${openId}',
+											"total_fee" : $("#total_price")
+													.html(),
+											"body" : $("#bodydes").html(),
+											"productid" : $("#productid").val()
+										}, //参数自己根据业务定义
 										dataType : "json",
-										success : function (data1,textStatus) {
-												var data = eval('(' + data1 + ')') ;
-												alert(data);
-												var appId = data.appId;
-												var timestamp = data.timestamp;
-												var nonceStr = data.nonceStr;
-												var packages = data.packages;
-												var finalsign = data.paySign;
-												alert(appId+","+timestamp+","+nonceStr+","+packages+","+paySign);
-												WeixinJSBridge
-														.invoke(
-																'getBrandWCPayRequest',
-																{
-																	"appId" : appId,
-																	"timeStamp" : timestamp,
-																	"nonceStr" : nonceStr,
-																	"package" : packages,
-																	"signType" : "MD5",
-																	"paySign" : finalsign
-																},
-																function(res) {
-																	//alert(res.err_msg);
+										success : function(data1, textStatus) {
+											var data = eval('(' + data1 + ')');
+											alert(data);
+											var appId = data.appId;
+											var timestamp = data.timestamp;
+											var nonceStr = data.nonceStr;
+											var packages = data.packages;
+											var finalsign = data.paySign;
+											alert(appId + "," + timestamp + ","
+													+ nonceStr + "," + packages
+													+ "," + paySign);
+											WeixinJSBridge
+													.invoke(
+															'getBrandWCPayRequest',
+															{
+																"appId" : appId,
+																"timeStamp" : timestamp,
+																"nonceStr" : nonceStr,
+																"package" : packages,
+																"signType" : "MD5",
+																"paySign" : finalsign
+															},
+															function(res) {
+																//alert(res.err_msg);
+																WeixinJSBridge
+																		.log(res.err_msg);
+																if (res.err_msg == "get_brand_wcpay_request:ok") {
+																	alert("支付成功!");
 																	WeixinJSBridge
-																			.log(res.err_msg);
-																	if (res.err_msg == "get_brand_wcpay_request:ok") {
-																		alert("支付成功!");
-																		WeixinJSBridge
-																				.call('closeWindow');
-																	} else if (res.err_msg == "get_brand_wcpay_request:cancel") {
-																		alert("用户取消支付!");
-																	} else {
-																		alert("支付失败!");
+																			.call('closeWindow');
+																} else if (res.err_msg == "get_brand_wcpay_request:cancel") {
+																	alert("用户取消支付!");
+																} else {
+																	alert("支付失败!");
 
-																		WeixinJSBridge
-																				.call('closeWindow');
-																	}
-																});
+																	WeixinJSBridge
+																			.call('closeWindow');
+																}
+															});
 											//自动关闭微信浏览器
 											WeixinJSBridge.call('closeWindow');
 										}
@@ -259,8 +239,10 @@ body {
 		<div class="col-xs-3" style="padding:0;">
 			<div style="padding-top:15px;text-align:right;">选择商品：&nbsp;</div>
 		</div>
-		<input type="hidden"  id="accesstoken"value='${accesstoken}'/>
-		<input type="hidden"  id="productid" value='${id}'/>
+		<input type="hidden" id="productid" value='${id}' /> <input
+			type="hidden" id="addrSign" value='${addrSign}' /> <input
+			type="hidden" id="timeStamp" value='${timeStamp}' /> <input
+			type="hidden" id="nonceStr" value='${nonceStr}' />
 		<div class="col-xs-9 dinfo" style="padding:0px; margin-bottom:10px;">
 			<div style="font-size:17px;margin:0;padding-top:10px;" id="bodydes">${describe
 				}</div>
@@ -298,20 +280,18 @@ body {
 		<div class="col-xs-3 col-sm-3"
 			style="padding-right:0px;text-align:right;">选择地址：&nbsp;</div>
 		<div class="col-xs-8 col-sm-8" style="padding:0px;">
-			<div class="">
+			<div class="addr-con">
 
-<%----%>
-<%--				<div id="addr">--%>
-<%--					<div id="address" style=""></div>--%>
-<%--					<div id="nameAndPhone"></div>--%>
-<%--				</div>--%>
-<%----%>
-<%----%>
-<%----%>
-<%--				<div class="edit edit-center" style=" color: #00ccff; ">--%>
-<%--					<a href="#" id="getAddr"><u>选择送货地址</u> </a>--%>
-<%--				</div>--%>
-					<input class="addr_a" type="text" /> 
+
+				<div id="addr">
+					<div id="address" style=""></div>
+					<div id="nameAndPhone"></div>
+				</div>
+
+				<div class="edit edit-center" style=" color: #00ccff; ">
+					<div id="getAddr">选择送货地址</div>
+				</div>
+				<%--					<input class="addr_a" type="text" /> --%>
 
 			</div>
 			<div class="tipinf">预计3-5个工作日到货。(稍后给你发送物流信息。偏远地区时间会稍长,请耐心等待)</div>
@@ -328,7 +308,8 @@ body {
 				id="getBrandWCPayRequest">
 				<div class="center">
 					<div style="float:left;">
-						<img alt="" src="../image/haw_81.png" style="width:20px;height:20px;">
+						<img alt="" src="../image/haw_81.png"
+							style="width:20px;height:20px;">
 					</div>
 					<div style="float:left;">&nbsp;微信支付</div>
 				</div>
@@ -340,7 +321,8 @@ body {
 				onclick="WeixinJSBridge.call('closeWindow');">
 				<div class="center">
 					<div style="float:left;">
-						<img alt="" src="../image/cancel.png" style="width:20px;height:20px;">
+						<img alt="" src="../image/cancel.png"
+							style="width:20px;height:20px;">
 					</div>
 					<div style="float:left;">&nbsp;取消订单</div>
 				</div>
@@ -371,6 +353,49 @@ body {
 		</div>
 		<!-- /.modal -->
 	</div>
+<div id="overPay" style="display:none;height: 100%; position: fixed; top: 0px; left: 0px; right: 0px; background-color: rgba(0, 0, 0, 0.9); z-index: 1000; transition: none 0.2s ease 0s ; opacity: 1;" ></div>
+	<div id="overAddr" class=""
+		style="display:none;overflow: hidden; bottom: 0px; left: 0px; right: 0px; background: none repeat scroll 0% 0% white; visibility: visible; position: absolute; z-index: 1000; transform: translate3d(0px, 0px, 0px); transition: all 300ms ease 0s; opacity: 1;">
+		<form class="js-address-fm address-ui address-fm">
+			<h4 class="address-fm-title">收货地址</h4>
+			<div class="js-address-cancel publish-cancel">
+				<!-- <div class="cancel-img"></div> -->
+				<img id="addrcancel" src="../image/cancel.png">
+			</div>
+			<div class="block" style="margin:0;">
+				<div class="block-item">
+					<label class="form-row form-text-row"> <em
+						class="form-text-label">收货人</em> <span class="input-wrapper"><input
+							type="text" name="user_name" class="form-text-input" value="${addr.userName}"
+							placeholder="名字" /> </span> </label>
+				</div>
+				<div class="block-item">
+					<label class="form-row form-text-row"> <em
+						class="form-text-label">联系电话</em> <span class="input-wrapper"><input
+							type="tel" name="tel" class="form-text-input" value="${addr.tel }"
+							placeholder="手机或固话" /> </span> </label>
+				</div>
+				<div class="block-item">
+					<label class="form-row form-text-row"> <em
+						class="form-text-label">详细地址</em> <span class="input-wrapper"><input
+							type="text" name="address_detail" class="form-text-input"
+							value="${addr.addr }" placeholder="街道门牌信息" /> </span> </label>
+				</div>
+				<div class="block-item">
+					<label class="form-row form-text-row"> <em
+						class="form-text-label">邮政编码</em> <span class="input-wrapper"><input
+							type="tel" maxlength="6" name="postal_code"
+							class="form-text-input" value="${addr.postal_code }" placeholder="邮政编码(选填)" /> </span> </label>
+				</div>
+			</div>
+			<div>
+				<div class="action-container">
+					<a class="btn btn-info  btn-block buy" id="saveAddr">保存</a>
+				</div>
+			</div>
+		</form>
+	</div>
+
 	<script type="text/javascript">
 		var marque = "";
 		var price = parseInt($("#price").html());

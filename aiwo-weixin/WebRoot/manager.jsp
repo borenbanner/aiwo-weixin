@@ -193,7 +193,7 @@
 					"macId" : macId,
 					"method" : method,
 					"userId" : '1'
-					//$("input[name=userId]").val()
+// 					$("input[name=userId]").val()
 				},
 				success : function(data) {
 					$(obj).parent().remove();

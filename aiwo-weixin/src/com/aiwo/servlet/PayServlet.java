@@ -72,7 +72,7 @@ public class PayServlet extends HttpServlet {
 
 		System.out.println("网页授权返回的Url:"+codeUrl + params);
 		String oauthUrl = "https://open.weixin.qq.com/connect/oauth2/authorize?appid="+Config.APPID+"&redirect_uri="
-				+ CommonUtil.urlEncodeUTF8(codeUrl + params)
+				+ codeUrl + params 
 				+ "&response_type=code&scope=snsapi_base&state=123";
 
 		response.sendRedirect(oauthUrl) ;
