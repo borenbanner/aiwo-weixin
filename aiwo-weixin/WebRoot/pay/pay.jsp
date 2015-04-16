@@ -156,17 +156,19 @@ body {
 		$("#saveAddr").click(function(){
 			 $.ajax({
 				  type:"POST",
-				  url :"addrServelt",
+				  url :"../addrServlet",
 				  data:{"openId" : '${openId}',
 				  "userName":$("input[name=user_name]").val(),
 				  "tel"	:$("input[name=tel]").val(),
 				  "addr" :$("input[name=address_detail]").val(),
 				  "postal_code" :$("input[name=postal_code]").val()				  
 				  },
-				  dataType:"json",
+				  dataType:"text",
 				  success:function(data){
-					$("#address").html($("input[name=address_detail]").val());
-					$("#nameAndPhone").html($("input[name=user_name]").val()+"/"+$("input[name=tel]").val());
+					$("#address").html("发货地址："+$("input[name=address_detail]").val());
+					$("#nameAndPhone").html("收货人/电话："+$("input[name=user_name]").val()+"/"+$("input[name=tel]").val());
+					
+					$("#overAddr,#overPay").css("display","none")  ;	
 				  }
 			  });
 		}) ;
@@ -353,13 +355,18 @@ body {
 		</div>
 		<!-- /.modal -->
 	</div>
-<div id="overPay" style="display:none;height: 100%; position: fixed; top: 0px; left: 0px; right: 0px; background-color: rgba(0, 0, 0, 0.9); z-index: 1000; transition: none 0.2s ease 0s ; opacity: 1;" ></div>
+	
+	
+	
+	
+	
+	
+	<div id="overPay" style="height: 100%; position: fixed; top: 0px; left: 0px; right: 0px; background-color: rgba(0, 0, 0, 0.9); z-index: 1000; transition: none 0.2s ease 0s ; opacity: 1;" ></div>
 	<div id="overAddr" class=""
-		style="display:none;overflow: hidden; bottom: 0px; left: 0px; right: 0px; background: none repeat scroll 0% 0% white; visibility: visible; position: absolute; z-index: 1000; transform: translate3d(0px, 0px, 0px); transition: all 300ms ease 0s; opacity: 1;">
-		<form class="js-address-fm address-ui address-fm">
+		style="overflow: hidden; bottom: 0px; left: 0px; right: 0px; background: none repeat scroll 0% 0% white; visibility: visible; position: absolute; z-index: 1000; transform: translate3d(0px, 0px, 0px); transition: all 300ms ease 0s; opacity: 1;">
+	<!--  	<form class="js-address-fm address-ui address-fm">
 			<h4 class="address-fm-title">收货地址</h4>
 			<div class="js-address-cancel publish-cancel">
-				<!-- <div class="cancel-img"></div> -->
 				<img id="addrcancel" src="../image/cancel.png">
 			</div>
 			<div class="block" style="margin:0;">
@@ -394,6 +401,46 @@ body {
 				</div>
 			</div>
 		</form>
+	-->
+		<form class="">
+			<div>
+				<div class="action-container">
+					<h4>送货地址：faneioanfoaenoifnaoienfa</h4>
+					<h4>接收人/电话：faieji/123135325</h4>
+				</div>
+				
+			</div>
+			<div class="row btns">
+		<div class="col-xs-1 col-md-4"></div>
+		<div class="col-xs-5 col-md-2 buydiv">
+			<button class="btn btn-info  btn-block"
+				style="text-align:center;border:0;height:40px;"
+				>
+				<div class="center">
+					<div style="float:left;">
+						<img alt="" src="../image/haw_81.png"
+							style="width:20px;height:20px;">
+					</div>
+					<div style="float:left;">&nbsp;使用该地址</div>
+				</div>
+			</button>
+		</div>
+		<div class="col-xs-5 col-md-2 canceldiv">
+			<button class="btn btn-info  btn-block cancel "
+				style="text-align:center;border:0;height:40px;">
+				<div class="center">
+					<div style="float:left;">
+						<img alt="" src="../image/cancel.png"
+							style="width:20px;height:20px;">
+					</div>
+					<div style="float:left;">&nbsp;重新编辑地址</div>
+				</div>
+			</button>
+		</div>
+	</div>
+		</form>
+	
+	
 	</div>
 
 	<script type="text/javascript">

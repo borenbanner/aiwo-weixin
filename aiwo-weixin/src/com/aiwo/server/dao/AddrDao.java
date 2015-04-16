@@ -27,6 +27,7 @@ public class AddrDao {
 		try {
 			conn = DB.getConn();
 			String sql = getSql(params);
+			System.out.println(sql);
 			pStmt = conn.prepareStatement(sql);
 			pStmt.execute();
 		} catch (ClassNotFoundException e) {
@@ -76,8 +77,10 @@ public class AddrDao {
 
 		try {
 			conn = DB.getConn();
-			String sql = "select * from addr where openid="+openId;
+			String sql = "select * from addr where openid=?";
+			System.out.println(sql );
 			pStmt = conn.prepareStatement(sql);
+			pStmt.setString(1, openId) ;
 			rs = pStmt.executeQuery() ;
 			if(rs.next()){
 				return new Addr(rs.getInt("addrId"),rs.getString("openid"),rs.getString("userName"),rs.getString("tel"),rs.getString("addr"),rs.getString("postal_code"));
