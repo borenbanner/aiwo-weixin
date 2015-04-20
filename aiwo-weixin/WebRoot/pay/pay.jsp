@@ -1,16 +1,18 @@
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
+<%@ page language="java" import="com.aiwo.server.pojo.Addr"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%
 	String path = request.getContextPath();
 	String basePath = request.getScheme() + "://"
 			+ request.getServerName() + ":" + request.getServerPort()
 			+ path + "/";
+//		request.getSession().setAttribute("addr", new Addr(1,"aaaaaaa","Name","186203823","addressssss","1028774"));
 %>
 <!DOCTYPE html >
-<html >
+<html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title></title>
-<!-- base href="http://pay.haierubic.com/weixinAir/" -->
 <meta name="viewport"
 	content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <link type="text/css" href="../css/bootstrap.min.css" rel="stylesheet">
@@ -143,109 +145,22 @@ body {
 	vertical-align: middle;
 	width: 100%;
 }
-.address-fm-title{
+
+.address-fm-title {
 	background: #FF3399;
 	color: #ffffff;
 }
 </style>
-<script type="text/javascript">
-	$(function() {
-		$("#getAddr,#addrcancel").click(function() {
-				$("#overAddr,#overPay").toggle()  ;	
-		});
-		$("#saveAddr").click(function(){
-			 $.ajax({
-				  type:"POST",
-				  url :"../addrServlet",
-				  data:{"openId" : '${openId}',
-				  "userName":$("input[name=user_name]").val(),
-				  "tel"	:$("input[name=tel]").val(),
-				  "addr" :$("input[name=address_detail]").val(),
-				  "postal_code" :$("input[name=postal_code]").val()				  
-				  },
-				  dataType:"text",
-				  success:function(data){
-					$("#address").html("发货地址："+$("input[name=address_detail]").val());
-					$("#nameAndPhone").html("收货人/电话："+$("input[name=user_name]").val()+"/"+$("input[name=tel]").val());
-					
-					$("#overAddr,#overPay").css("display","none")  ;	
-				  }
-			  });
-		}) ;
-		$("#getBrandWCPayRequest")
-				.click(
-						function() {
-							$
-									.ajax({
-										type : "POST",
-										url : "/pay/prepayIdServlet",
-										data : {
-											"openId" : '${openId}',
-											"total_fee" : $("#total_price")
-													.html(),
-											"body" : $("#bodydes").html(),
-											"productid" : $("#productid").val()
-										}, //参数自己根据业务定义
-										dataType : "json",
-										success : function(data1, textStatus) {
-											var data = eval('(' + data1 + ')');
-											alert(data);
-											var appId = data.appId;
-											var timestamp = data.timestamp;
-											var nonceStr = data.nonceStr;
-											var packages = data.packages;
-											var finalsign = data.paySign;
-											alert(appId + "," + timestamp + ","
-													+ nonceStr + "," + packages
-													+ "," + paySign);
-											WeixinJSBridge
-													.invoke(
-															'getBrandWCPayRequest',
-															{
-																"appId" : appId,
-																"timeStamp" : timestamp,
-																"nonceStr" : nonceStr,
-																"package" : packages,
-																"signType" : "MD5",
-																"paySign" : finalsign
-															},
-															function(res) {
-																//alert(res.err_msg);
-																WeixinJSBridge
-																		.log(res.err_msg);
-																if (res.err_msg == "get_brand_wcpay_request:ok") {
-																	alert("支付成功!");
-																	WeixinJSBridge
-																			.call('closeWindow');
-																} else if (res.err_msg == "get_brand_wcpay_request:cancel") {
-																	alert("用户取消支付!");
-																} else {
-																	alert("支付失败!");
-
-																	WeixinJSBridge
-																			.call('closeWindow');
-																}
-															});
-											//自动关闭微信浏览器
-											WeixinJSBridge.call('closeWindow');
-										}
-									});
-
-						});
-	});
-</script>
-
 </head>
 <body>
 	<div class="row info">
 		<div class="col-xs-3" style="padding:0;">
 			<div style="padding-top:15px;text-align:right;">选择商品：&nbsp;</div>
 		</div>
-		<input type="hidden" id="productid" value='${id}' /> <input
-			type="hidden" id="addrSign" value='${addrSign}' /> <input
-			type="hidden" id="timeStamp" value='${timeStamp}' /> <input
-			type="hidden" id="nonceStr" value='${nonceStr}' />
-		<div class="col-xs-9 dinfo" style="padding:0px; margin-bottom:10px;">
+		<input type="hidden" id="productid" value='${id}' /> 
+		<input type="hidden" id="addrId" value="${addr.addrId }"/>
+		<input type="hidden" id="openId" value="${openId}"/>
+ 		<div class="col-xs-9 dinfo" style="padding:0px; margin-bottom:10px;">
 			<div style="font-size:17px;margin:0;padding-top:10px;" id="bodydes">${describe
 				}</div>
 
@@ -286,13 +201,20 @@ body {
 
 
 				<div id="addr">
-					<div id="address" style=""></div>
-					<div id="nameAndPhone"></div>
+					<div id="address" style="">送货地址：${addr.addr }</div>
+					<div id="nameAndPhone">接收人/电话：${addr.userName }/${ addr.tel }</div>
 				</div>
+				<c:if test='${addr ==null }'>
+					<div class="edit edit-center" style=" color: #00ccff; ">
+						<div id="getAddr">选择送货地址</div>
+					</div>
+				</c:if>
 
-				<div class="edit edit-center" style=" color: #00ccff; ">
-					<div id="getAddr">选择送货地址</div>
-				</div>
+				<c:if test="${addr !=null }">
+					<div class="edit edit-center" style=" color: #00ccff; ">
+						<div id="editAddr">编辑送货地址</div>
+					</div>
+				</c:if>
 				<%--					<input class="addr_a" type="text" /> --%>
 
 			</div>
@@ -355,136 +277,53 @@ body {
 		</div>
 		<!-- /.modal -->
 	</div>
-	
-	
-	
-	
-	
-	
-	<div id="overPay" style="height: 100%; position: fixed; top: 0px; left: 0px; right: 0px; background-color: rgba(0, 0, 0, 0.9); z-index: 1000; transition: none 0.2s ease 0s ; opacity: 1;" ></div>
-	<div id="overAddr" class=""
-		style="overflow: hidden; bottom: 0px; left: 0px; right: 0px; background: none repeat scroll 0% 0% white; visibility: visible; position: absolute; z-index: 1000; transform: translate3d(0px, 0px, 0px); transition: all 300ms ease 0s; opacity: 1;">
-	<!--  	<form class="js-address-fm address-ui address-fm">
-			<h4 class="address-fm-title">收货地址</h4>
-			<div class="js-address-cancel publish-cancel">
-				<img id="addrcancel" src="../image/cancel.png">
-			</div>
-			<div class="block" style="margin:0;">
-				<div class="block-item">
-					<label class="form-row form-text-row"> <em
-						class="form-text-label">收货人</em> <span class="input-wrapper"><input
-							type="text" name="user_name" class="form-text-input" value="${addr.userName}"
-							placeholder="名字" /> </span> </label>
+
+	<div id="userAddr" style="display:none;">
+		<div id="overPay"
+			style=" height: 100%; position: fixed; top: 0px; left: 0px; right: 0px; background-color: rgba(0, 0, 0, 0.9); z-index: 1000; transition: none 0.2s ease 0s ; opacity: 1;"></div>
+		<div id="overAddr" class=""
+			style=" overflow: hidden; bottom: 0px; left: 0px; right: 0px; background: none repeat scroll 0% 0% white; visibility: visible; position: absolute; z-index: 1000; transform: translate3d(0px, 0px, 0px); transition: all 300ms ease 0s; opacity: 1;">
+
+			<form class="js-address-fm address-ui address-fm">
+				<h4 class="address-fm-title">收货地址</h4>
+				<div class="js-address-cancel publish-cancel">
+					<img id="addrcancel" src="../image/cancel.png">
 				</div>
-				<div class="block-item">
-					<label class="form-row form-text-row"> <em
-						class="form-text-label">联系电话</em> <span class="input-wrapper"><input
-							type="tel" name="tel" class="form-text-input" value="${addr.tel }"
-							placeholder="手机或固话" /> </span> </label>
-				</div>
-				<div class="block-item">
-					<label class="form-row form-text-row"> <em
-						class="form-text-label">详细地址</em> <span class="input-wrapper"><input
-							type="text" name="address_detail" class="form-text-input"
-							value="${addr.addr }" placeholder="街道门牌信息" /> </span> </label>
-				</div>
-				<div class="block-item">
-					<label class="form-row form-text-row"> <em
-						class="form-text-label">邮政编码</em> <span class="input-wrapper"><input
-							type="tel" maxlength="6" name="postal_code"
-							class="form-text-input" value="${addr.postal_code }" placeholder="邮政编码(选填)" /> </span> </label>
-				</div>
-			</div>
-			<div>
-				<div class="action-container">
-					<a class="btn btn-info  btn-block buy" id="saveAddr">保存</a>
-				</div>
-			</div>
-		</form>
-	-->
-		<form class="">
-			<div>
-				<div class="action-container">
-					<h4>送货地址：faneioanfoaenoifnaoienfa</h4>
-					<h4>接收人/电话：faieji/123135325</h4>
-				</div>
-				
-			</div>
-			<div class="row btns">
-		<div class="col-xs-1 col-md-4"></div>
-		<div class="col-xs-5 col-md-2 buydiv">
-			<button class="btn btn-info  btn-block"
-				style="text-align:center;border:0;height:40px;"
-				>
-				<div class="center">
-					<div style="float:left;">
-						<img alt="" src="../image/haw_81.png"
-							style="width:20px;height:20px;">
+				<div class="block" style="margin:0;">
+					<div class="block-item">
+						<label class="form-row form-text-row"> <em
+							class="form-text-label">收货人</em> <span class="input-wrapper"><input
+								type="text" name="user_name" class="form-text-input"
+								value="${addr.userName}" placeholder="名字" /> </span> </label>
 					</div>
-					<div style="float:left;">&nbsp;使用该地址</div>
-				</div>
-			</button>
-		</div>
-		<div class="col-xs-5 col-md-2 canceldiv">
-			<button class="btn btn-info  btn-block cancel "
-				style="text-align:center;border:0;height:40px;">
-				<div class="center">
-					<div style="float:left;">
-						<img alt="" src="../image/cancel.png"
-							style="width:20px;height:20px;">
+					<div class="block-item">
+						<label class="form-row form-text-row"> <em
+							class="form-text-label">联系电话</em> <span class="input-wrapper"><input
+								type="tel" name="tel" class="form-text-input"
+								value="${addr.tel }" placeholder="手机或固话" /> </span> </label>
 					</div>
-					<div style="float:left;">&nbsp;重新编辑地址</div>
+					<div class="block-item">
+						<label class="form-row form-text-row"> <em
+							class="form-text-label">详细地址</em> <span class="input-wrapper"><input
+								type="text" name="address_detail" class="form-text-input"
+								value="${addr.addr }" placeholder="街道门牌信息" /> </span> </label>
+					</div>
+					<div class="block-item">
+						<label class="form-row form-text-row"> <em
+							class="form-text-label">邮政编码</em> <span class="input-wrapper"><input
+								type="tel" maxlength="6" name="postal_code"
+								class="form-text-input" value="${addr.postal_code }"
+								placeholder="邮政编码(选填)" /> </span> </label>
+					</div>
 				</div>
-			</button>
+				<div>
+					<div class="action-container">
+						<a class="btn btn-info  btn-block buy" id="saveAddr">保存</a>
+					</div>
+				</div>
+			</form>
 		</div>
 	</div>
-		</form>
-	
-	
-	</div>
-
-	<script type="text/javascript">
-		var marque = "";
-		var price = parseInt($("#price").html());
-		console.log(price);
-		var totle_price = price * 1;
-		console.log("total:" + totle_price);
-		$('#less').click(function(e) {
-			var num = $("#num").html() * 1;
-			if (num > 1) {
-				$("#num").html(num - 1);
-				totle_price = price * (num - 1);
-				$("#total_price").html(totle_price);
-			}
-		});
-		$('#more').click(function(e) {
-
-			var num = $("#num").html() * 1;
-			totle_price = price * (num + 1);
-			$("#num").html(num + 1);
-			$("#total_price").html(totle_price);
-		});
-
-		function show(msg, type) {
-			var type = type;
-			if (type == "toWeixin") {
-				$("#toPage").css("display", "none");
-				$("#toWeixin").css("display", "");
-			} else {
-				$("#toWeixin").css("display", "none");
-				$("#toPage").css("display", "");
-			}
-			$("#msg").html(msg);
-			$('#alertMsg').modal('show');
-		};
-		$(".edit").click(function(e) {
-			var readdr = "";
-			if (readdr.length <= 0) {
-				$(this).removeClass("edit-center").addClass("edit-left");
-				$("#addr").addClass("addr");
-			}
-		});
-	</script>
 
 </body>
 </html>

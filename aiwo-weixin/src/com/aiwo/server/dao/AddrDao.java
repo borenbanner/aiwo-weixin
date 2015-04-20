@@ -49,19 +49,35 @@ public class AddrDao {
 	 */
 	private String getSql(Map<String, String> params) {
 
+		
+		
 		StringBuffer sb = new StringBuffer();
-		String insert = ("insert into addr(");
+		String insert = "insert into addr(" ;
 		String values = "  values(";
+		String update = "update addr set " ;
+		String addrId = params.get("addrId") ;
+		params.remove("addrId") ;
+		if(addrId != ""){
+			
+			for (Map.Entry<String, String> m : params.entrySet()) {
+				update += m.getKey() + "='" + m.getValue()+"'," ; 
+			}
+			update = update.substring(0,update.length()-1) ;
+			update += " where addrId = " + addrId ;
+			sb.append(update) ;
+		}else{
+			 
+			for (Map.Entry<String, String> m : params.entrySet()) {
+				insert += m.getKey() + ",";
+				values += "'" + m.getValue() + "'" + ",";
 
-		for (Map.Entry<String, String> m : params.entrySet()) {
-			insert += m.getKey() + ",";
-			values += "'" + m.getValue() + "'" + ",";
-
+			}
+			insert = insert.substring(0,insert.length()-1) + ")";
+			values = values.substring(0,values.length()-1)+")" ;
+			sb.append(insert) ;
+			sb.append(values) ;
 		}
-		insert = insert.substring(0,insert.length()-1) + ")";
-		values = values.substring(0,values.length()-1)+")" ;
-		sb.append(insert) ;
-		sb.append(values) ;
+		
 		return sb.toString();
 	}
 

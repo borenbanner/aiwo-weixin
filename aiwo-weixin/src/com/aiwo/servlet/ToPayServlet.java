@@ -95,6 +95,7 @@ public class ToPayServlet extends HttpServlet {
 		System.out.println("网页授权获取用户的openid:" + wx.getOpenId());
 		request.getSession().setAttribute("openId", wx.getOpenId());
 		request.getSession().setAttribute("addr", addr);
+		//System.out.println(addr);
 		
 		response.sendRedirect(request.getContextPath() + "/pay/pay.jsp?code="+code+"&state=123");
 	}

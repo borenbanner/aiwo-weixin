@@ -1,68 +1,164 @@
-function getAppId(){
-	return "wxa6309997e9c15c83" ;
-}
+$(function() {
+		$("#getBrandWCPayRequest").click(function() {
+							$.ajax({
+										type : "POST",
+										url : "/pay/prepayIdServlet",
+										data : {
+											"openId" : '${openId}',
+											"total_fee" : $("#total_price")
+													.html(),
+											"body" : $("#bodydes").html(),
+											"productid" : $("#productid").val()
+										}, //参数自己根据业务定义
+										dataType : "json",
+										success : function(data1, textStatus) {
+											var data = eval('(' + data1 + ')');
+											//alert(data);
+											var appId = data.appId;
+											var timestamp = data.timestamp;
+											var nonceStr = data.nonceStr;
+											var packages = data.packages;
+											var finalsign = data.paySign;
+											alert(appId + "," + timestamp + ","
+													+ nonceStr + "," + packages
+													+ "," + paySign);
+											WeixinJSBridge
+													.invoke(
+															'getBrandWCPayRequest',
+															{
+																"appId" : appId,
+																"timeStamp" : timestamp,
+																"nonceStr" : nonceStr,
+																"package" : packages,
+																"signType" : "MD5",
+																"paySign" : finalsign
+															},
+															function(res) {
+																//alert(res.err_msg);
+																WeixinJSBridge
+																		.log(res.err_msg);
+																if (res.err_msg == "get_brand_wcpay_request:ok") {
+																	alert("支付成功!");
+																	WeixinJSBridge
+																			.call('closeWindow');
+																} else if (res.err_msg == "get_brand_wcpay_request:cancel") {
+																	alert("用户取消支付!");
+																} else {
+																	alert("支付失败!");
 
-function getTimeStamp() {
-    var timestamp = new Date().getTime();
-    var timestampstring = timestamp.toString();//一定要转换字符串
-    oldTimeStamp = timestampstring;
-    return timestampstring;
-}
+																	WeixinJSBridge
+																			.call('closeWindow');
+																}
+															});
+											//自动关闭微信浏览器
+											WeixinJSBridge.call('closeWindow');
+										}
+									});
+						});
+	});
 
 
-function getNonceStr() {
-    var $chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    var maxPos = $chars.length;
-    var noceStr = "";
-    for (var i = 0; i < 32; i++) {
-        noceStr += $chars.charAt(Math.floor(Math.random() * maxPos));
-    }
-    oldNonceStr = noceStr;
-    return noceStr;
-}
+$(function(){
+
+	var addrobj = $("#addrId").val();
+	console.log(addrobj);
+	if (addrobj == '') {
+		//console.log("addr is null");
+		$("#userAddr").css("display","block") ;
+	};
+	var marque = "";
+	var price = parseFloat($("#price").html());
+	var totle_price = price * 1;
+	console.log("total:" + totle_price);
+	$('#less').click(function(e) {
+		var num = $("#num").html() * 1;
+		if (num > 1) {
+			$("#num").html(num - 1);
+			totle_price = price * (num - 1);
+			$("#total_price").html(totle_price);
+		}
+	});
+	$('#more').click(function(e) {
+
+		var num = $("#num").html() * 1;
+		totle_price = price * (num + 1);
+		$("#num").html(num + 1);
+		$("#total_price").html(totle_price);
+	});
+
+	function show(msg, type) {
+		var type = type;
+		if (type == "toWeixin") {
+			$("#toPage").css("display", "none");
+			$("#toWeixin").css("display", "");
+		} else {
+			$("#toWeixin").css("display", "none");
+			$("#toPage").css("display", "");
+		}
+		$("#msg").html(msg);
+		$('#alertMsg').modal('show');
+	};
+	$(".edit").click(function(e) {
+		var readdr = "";
+		if (readdr.length <= 0) {
+			$(this).removeClass("edit-center").addClass("edit-left");
+			$("#addr").addClass("addr");
+		}
+	});
+
+	$("#saveAddr")
+			.click(
+					function() {
+						$
+								.ajax({
+									type : "POST",
+									url : "../addrServlet",
+									data : {
+										"addrId":addrobj,
+										"openId" : $("#openId").val(),
+										"userName" : $(
+												"input[name=user_name]")
+												.val(),
+										"tel" : $("input[name=tel]").val(),
+										"addr" : $(
+												"input[name=address_detail]")
+												.val(),
+										"postal_code" : $(
+												"input[name=postal_code]")
+												.val()
+									},
+									dataType : "text",
+									success : function(data) {
+										$("#address")
+												.html(
+														"发货地址："
+																+ $(
+																		"input[name=address_detail]")
+																		.val());
+										$("#nameAndPhone")
+												.html(
+														"收货人/电话："
+																+ $(
+																		"input[name=user_name]")
+																		.val()
+																+ "/"
+																+ $(
+																		"input[name=tel]")
+																		.val());
+
+										$("#userAddr").css("display","none") ;
+									}
+								});
+					});
+
+	$("#editAddr,#getAddr").click(function() {
+		$("#userAddr").css("display","block") ;
+	});
+	$("#addrcancel").click(function(){
+		
+		$("#userAddr").css("display","none") ;
+	}) ;
 
 
-function getCode(){
 	
-	return '${code}' ;
-}
-
-/**
- * 
- *  获取accesstoken
- * @returns
- */
-function getaccesstoken(){
-	//alert("${accesstoken}".toString());
-	return $("#accesstoken").val().toString() ;
-	
-}
-
-function perapara(objvalues, isencode) {
-    var parastring = "";
-    for (var key in objvalues) {
-        isencode = isencode || false;
-        if (isencode) {
-            parastring += (key + "=" + encodeURIComponent(objvalues[key]) + "&");
-        }
-        else {
-            parastring += (key + "=" + objvalues[key] + "&");
-        }
-    }
-    parastring = parastring.substr(0, parastring.length - 1);
-    alert(parastring);
-    return parastring;
-}
-
-function getSign(beforesingstring) {
-    sign = CryptoJS.SHA1(beforesingstring).toString();
-    return sign;
-}
-
-var signparasobj = {
-        "accesstoken": "",
-        "appid": getAppId(),
-        "noncestr": "",
-        "timestamp": "",
-        "url": ""
-    };
+});
